@@ -124,7 +124,6 @@ async function findTag(tag_title) {
 
 async function fetchTags() {
   var tags = await fetch(process.env.URL+'get_tags')
-  console.log(tags);
   var data = await tags.json();
   return data;
 }
