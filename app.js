@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
   
   const options = {
     method: 'GET',
-    url: 'https://api.miro.com/v2/boards/'+board_id,
+    url: process.env.MIRO_URL+board_id,
     headers: {
       Accept: 'application/json',
       Authorization: 'Bearer '+authToken
@@ -82,7 +82,7 @@ app.get('/create/note_tn', (req, res) => {
 function createNote() {
   const options = {
     method: 'POST',
-    url: 'https://api.miro.com/v2/boards/'+board_id+'/sticky_notes',
+    url: process.env.MIRO_URL+board_id+'/sticky_notes',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ async function fetchTags() {
 function createTag(tag_title, is_date = false) {
   const options = {
     method: 'POST',
-    url: 'https://api.miro.com/v2/boards/'+board_id+'/tags',
+    url: process.env.MIRO_URL+board_id+'/tags',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ function createTag(tag_title, is_date = false) {
 function getUserInfo(uid) {
   const options = {
     method: 'GET',
-    url: 'https://api.miro.com/v2/boards/'+board_id+'/members/'+uid,
+    url: process.env.MIRO_URL+board_id+'/members/'+uid,
     headers: {
       Accept: 'application/json',
       Authorization: 'Bearer '+authToken
@@ -170,7 +170,7 @@ function getUserInfo(uid) {
 function attachTagToNote(item_id, tag_id) {
   const options = {
     method: 'POST',
-    url: 'https://api.miro.com/v2/boards/'+board_id+'/widgets/'+item_id+'?tag_id='+tag_id,
+    url: process.env.MIRO_URL+board_id+'/widgets/'+item_id+'?tag_id='+tag_id,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
