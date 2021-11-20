@@ -123,7 +123,7 @@ async function findTag(tag_title) {
 }
 
 async function fetchTags() {
-  var tags = await fetch('http://127.0.0.1:3787/get_tags')
+  var tags = await fetch(process.env.URL+'/get_tags')
   var data = await tags.json();
   return data;
 }
