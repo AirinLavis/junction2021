@@ -123,6 +123,7 @@ app.get('/fetch_content', async (req, res) => {
 async function createNote() {
   var note_content = await fetchContent();
   var c = Math.floor(Math.random() * colors.length);
+  var note_color = colors[c]
   const options = {
     method: 'POST',
     url:MIRO_URL+board_id+'/sticky_notes',
@@ -133,7 +134,7 @@ async function createNote() {
     },
     body: {
       data: {content: note_content},
-      style: {backgroundColor: c, textAlign: 'center', textAlignVertical: 'top'},
+      style: {backgroundColor: note_color, textAlign: 'center', textAlignVertical: 'top'},
       geometry: {x: '0.0', y: '0.0', width: '200', rotation: '0'}
     },
     json: true
