@@ -12,6 +12,21 @@ const MIRO_URL = process.env.MIRO_URL || "https://api.miro.com/v2/boards/"
 
 const authToken = process.env.TOKEN || "kd03LcLI2W0jaotIxTSrQyqeKq8"
 const board_id = process.env.BOARD_ID || "o9J_lhrJgtU%3D"
+const colors = [
+  "dark_green",
+  "red",
+  "light_blue",
+  "light_yellow",
+  "light_pink",
+  "gray",
+  "yellow",
+  "blue",
+  "orange",
+  "light_green",
+  "cyan",
+  "pink",
+  "violet"
+]
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
@@ -107,6 +122,7 @@ app.get('/fetch_content', async (req, res) => {
 
 async function createNote() {
   var note_content = await fetchContent();
+  var c = Math.floor(Math.random() * colors.length);
   const options = {
     method: 'POST',
     url:MIRO_URL+board_id+'/sticky_notes',
@@ -117,7 +133,7 @@ async function createNote() {
     },
     body: {
       data: {content: note_content},
-      style: {backgroundColor: 'green', textAlign: 'center', textAlignVertical: 'top'},
+      style: {backgroundColor: c, textAlign: 'center', textAlignVertical: 'top'},
       geometry: {x: '0.0', y: '0.0', width: '200', rotation: '0'}
     },
     json: true
