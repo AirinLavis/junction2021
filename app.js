@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
   
 // })
 
-app.get('/get_tags', (req, res) => {
+app.get('/get_alltags', (req, res) => {
   // let options = {
   //   mode: 'text',
   //   pythonOptions: [], // get print results in real-time
@@ -128,8 +128,8 @@ async function findTag(tag_title) {
 }
 
 async function fetchTags() {
-  var url = process.env.URL || "http://127.0.0.1/"
-  var tags = await fetch(url+'/get_tags')
+  var url = process.env.URL || "http://127.0.0.1"
+  var tags = await fetch(url+'/get_alltags')
   var data = await tags.json();
 
   return data;
