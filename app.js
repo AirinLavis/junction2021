@@ -129,7 +129,7 @@ async function findTag(tag_title) {
 
 async function fetchTags() {
   var url = process.env.URL || "http://127.0.0.1/"
-  var tags = await fetch(url+'get_tags')
+  var tags = await fetch(url+'/get_tags')
   var data = await tags.json();
 
   return data;
