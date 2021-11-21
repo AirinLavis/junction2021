@@ -2,20 +2,16 @@ const express = require('express')
 const app = express()
 const request = require('request');
 var bodyParser = require('body-parser');
-const { response } = require('express');
-const {spawn} = require('child_process');
-const {PythonShell} = require('python-shell');
+// const {PythonShell} = require('python-shell');
 const fetch = require('node-fetch')
-const fs = require("fs")
+
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
-var HTMLParser = require('node-html-parser');
-
 const MIRO_URL = process.env.MIRO_URL || "https://api.miro.com/v2/boards/"
 
-const authToken = "kd03LcLI2W0jaotIxTSrQyqeKq8"
-const board_id = "o9J_lhrJgtU%3D"
+const authToken = process.env.TOKEN || "kd03LcLI2W0jaotIxTSrQyqeKq8"
+const board_id = process.env.BOARD_ID || "o9J_lhrJgtU%3D"
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
