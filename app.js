@@ -112,7 +112,7 @@ function createNote() {
 
 async function findTag(tag_title) {
   // var resp = await fetchTags();
-  var resp = tags();
+  var resp = tags;
   return new Promise((resolve, reject) => {
     found = resp.find((tt) => {
       return tt.title == tag_title;
