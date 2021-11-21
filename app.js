@@ -7,6 +7,10 @@ const {spawn} = require('child_process');
 const {PythonShell} = require('python-shell');
 const fetch = require('node-fetch')
 const fs = require("fs")
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
+
+var HTMLParser = require('node-html-parser');
 
 const MIRO_URL = process.env.MIRO_URL || "https://api.miro.com/v2/boards/"
 
@@ -63,14 +67,14 @@ app.get('/', (req, res) => {
   //     })
   //     res.send(JSON.parse(jsonFile))
   // });
-const tags = '[{"id": "3074457368034420360", "color": "red", "title": "bitcoin"}, {"id": "3074457368044185926", "color": "yellow", "title": "random"}, {"id": "3074457368044186172", "color": "yellow", "title": "test_tag_12"}, {"id": "3074457368045666083", "color": "yellow", "title": "2021-11-20 19:44:54"}, {"id": "3074457368045666128", "color": "yellow", "title": "2021-11-20 19:45:10"}, {"id": "3074457368045666556", "color": "yellow", "title": "2021-11-20 19:47:35"}, {"id": "3074457368045782101", "color": "yellow", "title": "2021-11-20 19:50:38"}, {"id": "3074457368046511484", "color": "red", "title": "2021-11-20 20:23:26"}, {"id": "3074457368046640692", "color": "yellow", "title": "random_other"}, {"id": "3074457368046641479", "color": "yellow", "title": "Irina"}, {"id": "3074457368046789263", "color": "red", "title": "3074457368031540864"}, {"id": "3074457368048468833", "color": "red", "title": "2021-11-20 22:13:2"}, {"id": "3074457368048469289", "color": "red", "title": "2021-11-20 22:16:22"}, {"id": "3074457368048469497", "color": "red", "title": "2021-11-20 22:17:53"}, {"id": "3074457368048577790", "color": "yellow", "title": "2021-11-20 22:18:52"}, {"id": "3074457368048578195", "color": "yellow", "title": "2021-11-20 22:20:36"}, {"id": "3074457368048578290", "color": "red", "title": "2021-11-20 22:21:12"}]'
+const tags = '[{"id": "3074457368034420360", "color": "red", "title": "bitcoin"}, {"id": "3074457368044185926", "color": "yellow", "title": "random"}, {"id": "3074457368044186172", "color": "yellow", "title": "test_tag_12"}, {"id": "3074457368045666083", "color": "yellow", "title": "2021-11-20 19:44:54"}, {"id": "3074457368045666128", "color": "yellow", "title": "2021-11-20 19:45:10"}, {"id": "3074457368045666556", "color": "yellow", "title": "2021-11-20 19:47:35"}, {"id": "3074457368045782101", "color": "yellow", "title": "2021-11-20 19:50:38"}, {"id": "3074457368046511484", "color": "red", "title": "Excuses"}, {"id": "3074457368046640692", "color": "yellow", "title": "random_other"}, {"id": "3074457368046641479", "color": "yellow", "title": "Irina"}, {"id": "3074457368046789263", "color": "red", "title": "3074457368031540864"}, {"id": "3074457368048468833", "color": "red", "title": "2021-11-20 22:13:2"}, {"id": "3074457368048469289", "color": "red", "title": "2021-11-20 22:16:22"}, {"id": "3074457368048469497", "color": "red", "title": "2021-11-20 22:17:53"}, {"id": "3074457368048577790", "color": "yellow", "title": "2021-11-20 22:18:52"}, {"id": "3074457368048578195", "color": "yellow", "title": "2021-11-20 22:20:36"}, {"id": "3074457368048578290", "color": "red", "title": "2021-11-20 22:21:12"}]'
 //   res.send(JSON.parse(tags))
 // })
 
-app.get('/create/note_tn', (req, res) => {
+app.get('/create/note_tn', async (req, res) => {
 
   // First, we create the sticky note
-  var note = createNote().then((note_data) => {
+  var note = await createNote().then((note_data) => {
     var uid = note_data.createdBy.id;
     var noteId = note_data.id
     var createdAt = note_data.createdAt;
@@ -78,13 +82,35 @@ app.get('/create/note_tn', (req, res) => {
     .then((user_info) => {
       findTag(user_info.name)
       .then((tag_data) => {
-        attachTagToNote(noteId, tag_data.id).then(res.send('Note created!'))
+        attachTagToNote(noteId, tag_data.id)
+        .then(
+          attachTagToNote(noteId, '3074457368046511484')
+        )
+        .then(res.send('Note created!'))
       })
     })
   })
 })
 
-function createNote() {
+async function fetchContent() {
+  var ret = await fetch("http://programmingexcuses.com/")
+    .then( async (res) => {
+      var text = await res.text();
+      var j = new JSDOM(text);
+      var m = j.window.document.querySelector("center").textContent;
+      return m;
+    }).catch(err => console.log(err))
+    return ret;
+}
+
+app.get('/fetch_content', async (req, res) => {
+  var result = await fetchContent();
+  console.log(result)
+  res.send(result)
+})
+
+async function createNote() {
+  var note_content = await fetchContent();
   const options = {
     method: 'POST',
     url:MIRO_URL+board_id+'/sticky_notes',
@@ -94,7 +120,7 @@ function createNote() {
       Authorization: 'Bearer '+authToken
     },
     body: {
-      data: {content: 'Created via API TEST'},
+      data: {content: note_content},
       style: {backgroundColor: 'green', textAlign: 'center', textAlignVertical: 'top'},
       geometry: {x: '0.0', y: '0.0', width: '200', rotation: '0'}
     },
