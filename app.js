@@ -78,7 +78,7 @@ app.get('/create/note_tn', (req, res) => {
     .then((user_info) => {
       findTag(user_info.name)
       .then((tag_data) => {
-        attachTagToNote(noteId, tag_data.id)
+        attachTagToNote(noteId, tag_data.id).then(res.send('Note created!'))
       })
     })
   })
