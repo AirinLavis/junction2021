@@ -6,6 +6,7 @@ const { response } = require('express');
 const {spawn} = require('child_process');
 const {PythonShell} = require('python-shell');
 const fetch = require('node-fetch')
+const fs = require("fs")
 
 const authToken = "kd03LcLI2W0jaotIxTSrQyqeKq8"
 const board_id = "o9J_lhrJgtU%3D"
@@ -50,15 +51,23 @@ app.get('/get_tags', (req, res) => {
       scriptPath: 'scripts', //If you are having python_test.py script in same folder, then it's optional.
   };
 
-  PythonShell.run('test_requests.py', options, function (err, result){
-      if (err) throw err;
-      // result is an array consisting of messages collected
-      //during execution of script.
-      var jsonFile = "";
-      result.forEach((row) => {
-        jsonFile += row;
-      })
-      res.send(JSON.parse(jsonFile))
+  // PythonShell.run('test_requests.py', options, function (err, result){
+  //     if (err) throw err;
+  //     // result is an array consisting of messages collected
+  //     //during execution of script.
+  //     var jsonFile = "";
+  //     result.forEach((row) => {
+  //       jsonFile += row;
+  //     })
+  //     res.send(JSON.parse(jsonFile))
+  // });
+  fs.readFile('scripts/tags.txt', 'utf8', function (err, data) {
+    if (err) {
+        console.error(err)
+        throw "unable to read file.";
+    }
+    const obj = JSON.parse(data)
+    res.send(obj)
   });
 })
 

@@ -13,3 +13,7 @@ converted = json.loads(response.text)
 for x in converted["data"]:
     x["id"] = str(x["id"])
 print(json.dumps(converted["data"]))
+
+f = open("tags.txt", "w")
+f.write(json.dumps(converted["data"]))
+f.close()
